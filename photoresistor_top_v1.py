@@ -14,7 +14,7 @@ headers = {
 
 
 def send_sensor_reading(reading):
-    url = "http://iot.ademartutor.com/backend/api/reading/create/"
+    url = "http://3.27.174.228/backend/api/reading/create/"
     headers = {
         "X-API-KEY": "team-south-pole-2024-iot-project",
         "Content-Type": "application/json"
@@ -47,7 +47,7 @@ def send_empty_occupancy_detection():
         "sensor_name": "Photoresistor"
     }
     try:
-        response = requests.post("http://iot.ademartutor.com/backend/api/sensor", headers=headers, json=data)
+        response = requests.post("http://3.27.174.228/backend/api/sensor", headers=headers, json=data)
         response.raise_for_status()  # Raise an exception for 4xx and 5xx status codes
         print('Sent empty occupancy data to server:', response)
     except requests.exceptions.RequestException as e:
