@@ -14,35 +14,46 @@ headers = {
 
 
 def send_sensor_reading(reading):
-	url = "http://3.27.174.228/backend/api/reading/create/"
-	headers = {
-		"X-API-KEY": "team-south-pole-2024-iot-project",
-		"Content-Type": "application/json"
-	}
-	
-	# Get current time in UTC and format it
-	current_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    url = "http://iot.ademartutor.com/backend/api/reading/create/"
+    headers = {
+        "X-API-KEY": "team-south-pole-2024-iot-project",
+        "Content-Type": "application/json"
+    }
+    
+    # Get current time in UTC and format it
+    current_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-	data = {
-		"room_name": "WZ320",
-		"sensor_name": "Photoresistor",
-		"reading": reading,
-		"datetime_recorded_by_sensor": current_time
-	}
-	
-	response = requests.post(url, headers=headers, data=json.dumps(data))
-	print ('Light value: ', reading)
-	print ('Sent data to server: ', response)
+    data = {
+        "room_name": "WZ320",
+        "sensor_name": "Photoresistor",
+        "reading": reading,
+        "datetime_recorded_by_sensor": current_time
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response.raise_for_status()  # Raise an exception for 4xx and 5xx status codes
+        print('Sent data to server:', response)
+    except requests.exceptions.RequestException as e:
+        print(f'Error sending data to server: {e}')
+    
+    print('Light value:', reading)
 	
 def send_empty_occupancy_detection():
-	data = { 
-		"presence_detected": False,
-		"room_name": "WZ320",
-		"temperature": "16",
-		"sensor_name": "Photoresistor"
-	}
-	requests.post("http://3.27.174.228/backend/api/sensor", headers=headers, json=data)
-	print ('Light dim detected at value: ', ADC.read(0))
+    data = { 
+        "presence_detected": False,
+        "room_name": "WZ320",
+        "temperature": "16",
+        "sensor_name": "Photoresistor"
+    }
+    try:
+        response = requests.post("http://iot.ademartutor.com/backend/api/sensor", headers=headers, json=data)
+        response.raise_for_status()  # Raise an exception for 4xx and 5xx status codes
+        print('Sent empty occupancy data to server:', response)
+    except requests.exceptions.RequestException as e:
+        print(f'Error sending empty occupancy data to server: {e}')
+    
+    print('Light dim detected at value:', ADC.read(0))
 
 
 def setup():
